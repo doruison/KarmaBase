@@ -44,15 +44,17 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>D:\SoftWare\gtest-1.7.0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>D:\SoftWare\gtest-1.7.0\msvc\gtest\Debug\gtestd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,18 +73,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\pf_buffermgr.cc" />
-    <ClCompile Include="src\pf_error.cc" />
-    <ClCompile Include="src\pf_filehandle.cc" />
-    <ClCompile Include="src\pf_hashtable.cc" />
-    <ClCompile Include="src\pf_manager.cc" />
-    <ClCompile Include="src\pf_pagehandle.cc" />
-    <ClCompile Include="src\pf_statistics.cc" />
-    <ClCompile Include="src\pf_test1.cc" />
-    <ClCompile Include="src\pf_test2.cc" />
-    <ClCompile Include="src\pf_test3.cc" />
-    <ClCompile Include="src\rm_test.cc" />
-    <ClCompile Include="src\statistics.cc" />
+    <ClCompile Include="src\QueryComplier\QL_lexer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\linkedlist.h" />
