@@ -25,28 +25,34 @@ public:	lexer(){}
 
 	vector<token> operator()(string s){
 		input = s;
-		for (auto i = 0; i <(int) input.size(); i++)
-		{
-			
-			if (iswspace(input[i]))
-				continue;
-			if (other_token.count(input[i]))
+		try{
+			for (auto i = 0; i < (int)input.size(); i++)
 			{
-				symbol_table.push_back((other_token.find(input[i]))->second);
-				continue;
+
+				if (iswspace(input[i]))
+					continue;
+				if (other_token.count(input[i]))
+				{
+					symbol_table.push_back((other_token.find(input[i]))->second);
+					continue;
+				}
+
+				if (!iswpunct(input[i]) && !iswspace(input[i]))
+				{
+					symbol_table.push_back(name(i));
+					i--;
+					continue;
+
+				}
+				throw invalid_argument("非法输入!");
 			}
 
-			if (iswalnum(input[i]))
-			{
-				symbol_table.push_back(name(i));
-				i--;
-				continue;
-				   
-			}
-		//	throw invalid_argument("非法输入!");
 		}
+		catch (invalid_argument ia){
+		cout<<	ia.what()<<endl;
 
 
+		}
 		return symbol_table;
 
 	}
@@ -54,7 +60,7 @@ public:	lexer(){}
 private:
 	token name(int &i){
 		int cachei = i;
-		while (iswalnum(input[i]))
+		while (!iswpunct(input[i]) && !iswspace(input[i]))
 			i++;
 		return *new token{ 20, *(new string(input, cachei, i - cachei)) };
 	}
@@ -83,13 +89,18 @@ int main()
 	
 
 	lexer l;
-	vector<token> symbol_table=l("INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); ");
+	vector<token> symbol_table=l("!#$&*( ^^%INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); ");
 	for (auto a : symbol_table)
 	{
 		cout <<a.first <<":"<<a.second<<endl;
 	}
-	//cout << iswpunct('在');
-
+	
+	
+	symbol_table = l("INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); ");
+	for (auto a : symbol_table)
+	{
+		cout << a.first << ":" << a.second << endl;
+	}
 
 
 	return 0;
