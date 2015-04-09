@@ -7,6 +7,7 @@
 #include <memory>
 #include <gtest/gtest.h>
 #include <map>
+#include<cwctype>
 
 #include <cstring>
 
@@ -27,7 +28,7 @@ public:	lexer(){}
 		for (auto i = 0; i <(int) input.size(); i++)
 		{
 			
-			if (isspace(input[i]))
+			if (iswspace(input[i]))
 				continue;
 			if (other_token.count(input[i]))
 			{
@@ -35,7 +36,7 @@ public:	lexer(){}
 				continue;
 			}
 
-			if (isalpha(input[i]))
+			if (iswalnum(input[i]))
 			{
 				symbol_table.push_back(name(i));
 				i--;
@@ -53,7 +54,7 @@ public:	lexer(){}
 private:
 	token name(int &i){
 		int cachei = i;
-		while (isalnum(input[i]))
+		while (iswalnum(input[i]))
 			i++;
 		return *new token{ 20, *(new string(input, cachei, i - cachei)) };
 	}
@@ -78,16 +79,18 @@ private:
 
 int main()
 {
-	//std::string s;
-//	std::cin >> s;
+	
 	
 
 	lexer l;
-	vector<token> symbol_table=l("INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(S2, J6, P4); ");
+	vector<token> symbol_table=l("INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(±±¾©, J6, P4); ");
 	for (auto a : symbol_table)
 	{
 		cout <<a.first <<":"<<a.second<<endl;
 	}
+	//cout << iswpunct('ÔÚ');
+
+
 
 	return 0;
 }
