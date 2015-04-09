@@ -74,6 +74,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\QueryComplier\QL_lexer.cpp" />
+    <ClCompile Include="src\QueryComplier\源.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\linkedlist.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="src\pf_buffermgr.h" />
     <ClInclude Include="src\pf_hashtable.h" />
     <ClInclude Include="src\pf_internal.h" />
+    <ClInclude Include="src\QueryComplier\QC.h" />
     <ClInclude Include="src\redbase.h" />
     <ClInclude Include="src\rm.h" />
     <ClInclude Include="src\rm_rid.h" />
