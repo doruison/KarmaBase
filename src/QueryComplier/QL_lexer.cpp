@@ -23,7 +23,7 @@ public:	lexer(){}
 
 
 
-	vector<token> operator()(string s){
+	vector<token> operator()(const string &s){
 		input = s;
 		try{
 			for (auto i = 0; i < (int)input.size(); i++)
@@ -89,14 +89,15 @@ int main()
 	
 
 	lexer l;
-	vector<token> symbol_table=l("!#$&*( ^^%INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); ");
+	//右值引用：测试
+	vector<token> && symbol_table = move(l("!#$&*( ^^%INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); ")); 
 	for (auto a : symbol_table)
 	{
 		cout <<a.first <<":"<<a.second<<endl;
 	}
 	
-	
-	symbol_table = l("INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); ");
+	//右值引用：测试
+	symbol_table  =move( l("INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); "));
 	for (auto a : symbol_table)
 	{
 		cout << a.first << ":" << a.second << endl;
