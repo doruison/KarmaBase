@@ -7,6 +7,7 @@
 #include <memory>
 #include <gtest/gtest.h>
 #include <map>
+#include<unordered_map>
 #include<cwctype>
 #include"QC.h"
 #include <cstring>
@@ -51,7 +52,9 @@ token lexer::name(int &i){
 	int cachei = i;
 	while (!iswpunct(input[i]) && !iswspace(input[i]))
 		i++;
-	return *new token{ 20, *(new std::string(input, cachei, i - cachei)) };
+	if (keyword.count(std::string(input, cachei, i - cachei)))
+		return *new token{ keyword.find(std::string(input, cachei, i - cachei))->second, std::string(input, cachei, i - cachei) };
+	else	return *new token{ NAMEORDER, *(new std::string(input, cachei, i - cachei)) };
 }
 
 
