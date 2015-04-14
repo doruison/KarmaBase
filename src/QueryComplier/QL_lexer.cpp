@@ -17,25 +17,45 @@
 std::vector<token> lexer::operator()(const std::string &s){
 	symbol_table.clear();
 	input = s;
-std::cout << input;
+
 	try{
-		for (auto i = 0; i < (int)input.size(); i++)
+		for (unsigned int i = 0; i < input.size(); i++)
 		{
+
+			std::cout << input[i];
 			if (iswspace(input[i]))
 				continue;
+			if (input[i] == '\'')
+			{
+				
+				symbol_table.push_back(sqlstring(i));
+				
+				continue;
+			
+			}
 			if (other_token.count(input[i]))
 			{
 				symbol_table.push_back((other_token.find(input[i]))->second);
+				
 				continue;
 			}
 			if (!iswpunct(input[i]) && !iswspace(input[i]))
 			{
-				symbol_table.push_back(name(i));
-				i--;
+				if (iswdigit(input[i]))
+				{
+					symbol_table.push_back(digit(i));
+					i--;
+				
+				}
+				else
+				{
+					symbol_table.push_back(name(i));
+					i--;
+				}
 				continue;
 
 			}		
-			throw std::invalid_argument("非法输入!");
+			throw std::invalid_argument("非法输入1!");
 		}
 
 	}
@@ -49,8 +69,8 @@ std::cout << input;
 
 }
 
-token lexer::name(int &i){
-	int cachei = i;
+token lexer::name(unsigned int &i){
+	unsigned cachei = i;
 	while (i<input.size()&&!iswpunct(input[i]) && !iswspace(input[i]))
 	{
 		i++;
@@ -59,6 +79,43 @@ token lexer::name(int &i){
 	if (keyword.count(std::string(input, cachei, i - cachei)))
 		return *new token{ keyword.find(std::string(input, cachei, i - cachei))->second, std::string(input, cachei, i - cachei) };
 	else	return *new token{ NAMEORDER, *(new std::string(input, cachei, i - cachei)) };
+}
+
+token lexer::sqlstring(unsigned int &i){
+	unsigned cachei = i;
+	i++;
+	while (i<input.size() && input[i]!='\'')
+	{
+		i++;
+		//	std::cout <<i<< input[i];
+	}
+	if (input[i] != '\'')
+		throw std::invalid_argument("非法输入2!");
+	std::cout << "string" << cachei  <<"  "<< i  << * (new std::string(input, cachei + 1, i - cachei +3));
+			return *new token{ NAMEORDER+2, *(new std::string(input, cachei+1, i - cachei-1)) };
+}
+
+token lexer::digit(unsigned int &i){
+	unsigned cachei = i;
+	while (i<input.size() && !iswpunct(input[i]) && iswdigit(input[i]))
+	{
+		i++;
+		//	std::cout <<i<< input[i];
+	}
+	if (i<input.size() && input[i] == '.')
+	{
+		i++;
+		while (i < input.size() && !iswpunct(input[i]) && iswdigit(input[i]))
+		{
+			i++;
+			//	std::cout <<i<< input[i];
+		}
+		//real型（小数）
+		return *new token{ NAMEORDER+3 , *(new std::string(input, cachei, i - cachei)) };
+
+	}
+	//int整数
+		return *new token{ NAMEORDER+4, *(new std::string(input, cachei, i - cachei)) };
 }
 
 

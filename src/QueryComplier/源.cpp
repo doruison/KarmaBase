@@ -44,7 +44,9 @@ public:
 
 	inline	void match(int s){
 		std::cout << s;
-
+		if (i < symbol_table.size())
+			std::cout << symbol_table[i].second << " |";
+		else std::cout << "outrange";
 		if (i < symbol_table.size() && s == symbol_table[i].first)
 		{
 			i++;
@@ -54,24 +56,17 @@ public:
 #endif
 
 		}
-		else throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+		else throw std::invalid_argument("  非法记号！" + symbol_table[i].second);
 
 
 
 	}
 
-	void match(const std::string &s){
 
-		if (i < symbol_table.size() && s == symbol_table[i].second)
-			i++;
-		else throw std::invalid_argument("非法记号！" + symbol_table[i].second);
-
-
-	}
 	//lanch() 未修正
 	void command(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号2！" + symbol_table[i].second);
 		if (symbol_table[i].first == 32 || symbol_table[i].first == 33)
 			ddl();
 		else 	if (symbol_table[i].first == 21 || symbol_table[i].first == 25 || symbol_table[i].first == 24 || symbol_table[i].first == 26)
@@ -86,7 +81,7 @@ public:
 	}
 	void ddl(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号3！" + symbol_table[i].second);
 		if (i + 1 < symbol_table.size() && symbol_table[i].first == 33 && symbol_table[i + 1].first == 40)
 		{
 			createtable();
@@ -110,7 +105,7 @@ public:
 			dropindex();
 
 		}
-		else 			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+		else 			throw std::invalid_argument("非法记号4！" + symbol_table[i].second);
 
 
 
@@ -119,7 +114,7 @@ public:
 	}
 	void dml(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号5！" + symbol_table[i].second);
 		switch (symbol_table[i].first){
 		case 21:
 			query();
@@ -134,13 +129,13 @@ public:
 			update();
 			break;
 		default:
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号6！" + symbol_table[i].second);
 
 		}
 	}
 	void util(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号7！" + symbol_table[i].second);
 		switch (symbol_table[i].first){
 		case 34:
 			load();
@@ -163,14 +158,14 @@ public:
 
 
 		default:
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号8！" + symbol_table[i].second);
 
 		}
 	}
 	void nothing(){}
 	void createtable(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号9！" + symbol_table[i].second);
 
 
 		match(33);
@@ -189,7 +184,7 @@ public:
 	void createindex(){
 
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号10！" + symbol_table[i].second);
 		match(33);
 		match(41);
 		match(NAMEORDER);
@@ -203,7 +198,7 @@ public:
 	}
 	void droptable(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号11！" + symbol_table[i].second);
 
 
 		match(32);
@@ -216,10 +211,10 @@ public:
 
 	void dropindex(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号12！" + symbol_table[i].second);
 
-		match("drop");
-		match("index");
+		match(32);
+		match(41);
 		match(NAMEORDER);
 		match(0);
 		match(NAMEORDER);
@@ -231,24 +226,24 @@ public:
 	}
 	void query(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号13！" + symbol_table[i].second);
 		match(21);
 		non_mt_select_clause();
 		match(22);
 		non_mt_relation_list();
 		opt_where_clause();
-		if (symbol_table[i].first == 44)
+		if (i< symbol_table.size()&&symbol_table[i].first == 44)
 		{
 			opt_order_by_clause();
-			if (symbol_table[i].first == 45)
+			if (i< symbol_table.size() && symbol_table[i].first == 45)
 
 				opt_group_by_clause();
 		}
-		if (symbol_table[i].first == 45)
+		else if (i< symbol_table.size() && symbol_table[i].first == 45)
 		{
 			opt_group_by_clause();
 
-			if (symbol_table[i].first == 44)
+			if (i< symbol_table.size() && symbol_table[i].first == 44)
 				opt_order_by_clause();
 
 		}
@@ -256,12 +251,26 @@ public:
 	}
 	void insert(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号14！" + symbol_table[i].second);
 
 		match(24);
 		match(30);
 		match(NAMEORDER);
-		match("values");
+		//insert into单独指定属性的情形。nameorder应判断属性。暂未实现。
+		if (i< symbol_table.size() && symbol_table[i].first == 0)
+		{
+			match(0);
+			match(NAMEORDER);
+			while (symbol_table[i].first == 4)
+			{
+				match(4);
+				match(NAMEORDER);
+			}
+match(1);
+
+		}
+		match(31);
+		
 		match(0);
 		non_mt_value_list();
 		match(1);
@@ -276,7 +285,7 @@ public:
 	}
 	void delete_sql(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号15！" + symbol_table[i].second);
 
 		match(25);
 		match(22);
@@ -294,15 +303,23 @@ public:
 	}
 	void update(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号16！" + symbol_table[i].second);
 
 		match(26);
 		match(NAMEORDER);
 		match(36);
 
 		relattr();
-		match("eq");
+		match(3);
 		relattr_or_value();
+		while (i < symbol_table.size() && symbol_table[i].first == 4)
+		{
+			match(4);
+			relattr();
+			match(3);
+			relattr_or_value();
+		
+		}
 		opt_where_clause();
 
 
@@ -311,14 +328,15 @@ public:
 
 
 	}
+	
 	void load(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号19！" + symbol_table[i].second);
 
 		match(34);
 		match(NAMEORDER);
 		match(0);
-		match("qstring");
+		match(NAMEORDER+2);
 		match(1);
 
 
@@ -328,7 +346,7 @@ public:
 	}
 	void exit(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号20！" + symbol_table[i].second);
 
 		match(35);
 
@@ -342,12 +360,12 @@ public:
 	void set(){
 
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号21！" + symbol_table[i].second);
 
 		match(36);
 		match(NAMEORDER);
-		match("eq");
-		match("qstring");
+		match(3);
+		match(NAMEORDER+2);
 
 
 
@@ -357,7 +375,7 @@ public:
 	}
 	void help(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号22！" + symbol_table[i].second);
 
 
 		match(37);
@@ -371,7 +389,7 @@ public:
 	}
 	void print(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号23！" + symbol_table[i].second);
 
 		match(38);
 		match(NAMEORDER);
@@ -387,7 +405,7 @@ public:
 	void buffer(){
 
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号24！" + symbol_table[i].second);
 
 		if (i + 1 < symbol_table.size() && symbol_table[i + 1].first == 43)
 		{
@@ -399,13 +417,13 @@ public:
 			//resize action
 
 		}
-		else		 throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+		else		 throw std::invalid_argument("非法记号25！" + symbol_table[i].second);
 
 
 	}
 	void non_mt_attrtype_list(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号26！" + symbol_table[i].second);
 		attrtype();
 
 		if (i < symbol_table.size() && symbol_table[i].first == 4){
@@ -419,7 +437,7 @@ public:
 	}
 	void opt_relname(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号27！" + symbol_table[i].second);
 		if (symbol_table[i].first == NAMEORDER)
 			match(NAMEORDER);
 
@@ -428,14 +446,14 @@ public:
 	void non_mt_select_clause(){
 
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号28！" + symbol_table[i].second);
 
 
 		if (symbol_table[i].first == 6)
 			match(6);
 		else if (symbol_table[i].first == NAMEORDER || (symbol_table[i].first >= 47 && symbol_table[i].first <= 51))
 			non_mt_aggrelattr_list();
-		else	throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+		else	throw std::invalid_argument("非法记号29！" + symbol_table[i].second);
 
 
 
@@ -443,9 +461,9 @@ public:
 	}
 	void non_mt_aggrelattr_list(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号30！" + symbol_table[i].second);
 		aggrelattr();
-		if (symbol_table[i].first == 4)
+		if (i< symbol_table.size() && symbol_table[i].first == 4)
 		{
 
 			match(4);
@@ -460,7 +478,7 @@ public:
 
 	void opt_order_by_clause(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号31！" + symbol_table[i].second);
 
 
 		if (44 == symbol_table[i].first){
@@ -475,7 +493,7 @@ public:
 	
 	void opt_group_by_clause(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号32！" + symbol_table[i].second);
 
 
 		if (45 == symbol_table[i].first){
@@ -489,9 +507,9 @@ public:
 	}
 	void relattr(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号33！" + symbol_table[i].second);
 		match(NAMEORDER);
-		if (symbol_table[i].first == 10)
+		if (i< symbol_table.size() && symbol_table[i].first == 10)
 		{
 
 			match(10);
@@ -505,7 +523,7 @@ public:
 	}
 	void opt_where_clause(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号34！" + symbol_table[i].second);
 
 
 		if (23 == symbol_table[i].first){
@@ -518,7 +536,7 @@ public:
 	}
 	void attrtype(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号35！" + symbol_table[i].second);
 		match(NAMEORDER);
 		match(NAMEORDER);
 	}
@@ -527,46 +545,46 @@ public:
 
 	void aggrelattr(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号36！" + symbol_table[i].second);
 		//开头时ammsc的情况
 		if (symbol_table[i].first <= 51 && symbol_table[i].first >= 47)
 		{
 			ammsc();
 			match(0);
 			//ammsc '(' T_STRING 开头
-			if (symbol_table[i].first == NAMEORDER)
+			if (i< symbol_table.size() && symbol_table[i].first == NAMEORDER)
 			{
 				match(NAMEORDER);
-				if (symbol_table[i].first == 10)
+				if (i< symbol_table.size() && symbol_table[i].first == 10)
 				{
 					match(10);
 					match(NAMEORDER);
 				}
 
 			}
-			else	if (symbol_table[i].first == 6)
+			else	if (i< symbol_table.size() && symbol_table[i].first == 6)
 				match(6);
-			else 	throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			else 	throw std::invalid_argument("非法记号37！" + symbol_table[i].second);
 
 			match(1);
 		}
-		else if (symbol_table[i].first == NAMEORDER)
+		else if (i< symbol_table.size() && symbol_table[i].first == NAMEORDER)
 		{
 			match(NAMEORDER);
-			if (symbol_table[i].first == 10)
+			if (i< symbol_table.size() && symbol_table[i].first == 10)
 			{
 				match(10);
 				match(NAMEORDER);
 			}
 		}
-		else 		throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+		else 		throw std::invalid_argument("非法记号38！" + symbol_table[i].second);
 
 	}	
 
 
 	void ammsc(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号39！" + symbol_table[i].second);
 		switch (symbol_table[i].first){
 		case 47:
 			match(47);
@@ -585,19 +603,19 @@ public:
 			break;
 
 		default:
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号40！" + symbol_table[i].second);
 
 		}
 	}
 
 	void non_mt_relattr_list(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号41！" + symbol_table[i].second);
 		relattr();
 
 		if (4 == symbol_table[i].first){
 
-			match(",");
+			match(4);
 			non_mt_relattr_list();
 		}
 
@@ -611,9 +629,9 @@ public:
 	}
 	void non_mt_relation_list(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号42！" + symbol_table[i].second);
 		relation();
-		if (symbol_table[i].first == 4)
+		if (i< symbol_table.size() && symbol_table[i].first == 4)
 		{
 
 			match(4);
@@ -630,7 +648,7 @@ public:
 	
 	void ordering_spec(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号43！" + symbol_table[i].second);
 		relattr();
 		opt_asc_desc();
 
@@ -640,7 +658,7 @@ public:
 	}
 	void opt_asc_desc(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号44！" + symbol_table[i].second);
 		switch (symbol_table[i].first){
 		case 52:
 			match(52);
@@ -659,9 +677,9 @@ public:
 	void non_mt_cond_list(){
 
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号45！" + symbol_table[i].second);
 		condition();
-		if (27 == symbol_table[i].first){
+		if (i<symbol_table.size()&&27 == symbol_table[i].first){
 
 			match(27);
 			non_mt_cond_list();
@@ -671,72 +689,97 @@ public:
 	}
 	void condition(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号46！" + symbol_table[i].second);
 		relattr();
-		op();
-		relattr_or_value();
+		if (i < symbol_table.size()&&symbol_table[i].first == 28)
+		{
+			match(28);
+			match(0);
+			query();
+			match(1);
+		
+		}
+		else if (i < symbol_table.size()&&(symbol_table[i].first == 3 || (symbol_table[i].first >= 11 && symbol_table[i].first <= 13)))
+		{
+			op();
+			relattr_or_value();
+		}
+		else throw std::invalid_argument("非法记号46！" + symbol_table[i].second);
 
 	}
-	//关系运算符。暂时仅实现= > <，不等于不大于不小于未实现
+	
 	void op(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
-		switch (symbol_table[i].first){
-		case 3:
-			match(3);
-			break;
-		case 11:
-			match(11);
-			break;
-		case 12:
-			match(12);
-			break;
+			throw std::invalid_argument("非法记号17！" + symbol_table[i].second);
+		if (symbol_table[i].first == 11 || symbol_table[i].first == 12)
+		{
+			match(symbol_table[i].first);
+			if (i< symbol_table.size() && symbol_table[i].first == 3)
+				match(3);
 
-		default:
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+
 		}
+		else if (symbol_table[i].first == 13)
+		{
+			match(13);
+			match(3);
 
+
+		}
+		else if (symbol_table[i].first == 3)
+			match(3);
+		else	throw std::invalid_argument("非法记号18！" + symbol_table[i].second);
 	}
 	void relattr_or_value(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号49！" + symbol_table[i].second);
 		switch (symbol_table[i].first){
 		case NAMEORDER:
-			relattr();
+	relattr();
+		break;
+		case NAMEORDER + 2:
+			values();
 			break;
-			//应为“value”对应值
-		case 2:
-			value();
+	
+		case NAMEORDER + 3:
+			values();
 			break;
-
+		case NAMEORDER + 4:
+			values();
+			break;
 
 		default:
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号50！" + symbol_table[i].second);
 
 		}
 	}
-	void value(){
+
+	
+	void values(){
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+			throw std::invalid_argument("非法记号49！" + symbol_table[i].second);
 		switch (symbol_table[i].first){
-		case 1:
-			match("qstring");
+		case NAMEORDER+2:
+		match(NAMEORDER+2);
 			break;
-		case 2:
-			match("int");
+       case NAMEORDER+3:
+		   match(NAMEORDER + 3);
 			break;
-		case 3:
-			match("real");
-			break;
-		default:
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+	   case NAMEORDER + 4:
+		   match(NAMEORDER + 4);
+		   break;
+
+
+			default:
+				throw std::invalid_argument("非法记号50！" + symbol_table[i].second);
+
 		}
 	}
 	void non_mt_value_list(){
 
 		if (i >= symbol_table.size())
-			throw std::invalid_argument("非法记号！" + symbol_table[i].second);
-		value();
+			throw std::invalid_argument("非法记号53！" + symbol_table[i].second);
+		values();
 		if (4 == symbol_table[i].first){
 
 			match(4);
@@ -748,7 +791,7 @@ public:
 
 		void relation(){
 			if (i >= symbol_table.size())
-				throw std::invalid_argument("非法记号！" + symbol_table[i].second);
+				throw std::invalid_argument("非法记号54！" + symbol_table[i].second);
 			match(NAMEORDER);
 
 		}
@@ -803,28 +846,22 @@ public:
 		lexer l;
 
 		std::vector<token>	symbol_table;
+		std::string s;
 
-		symbol_table = l("INSERT INTO SPJ( SNO, JNO, PNO, QTY) VALUES(北京, J6, P4); ");
+		std::getline(std::cin, s);
+		symbol_table = l(s);
 		for (auto a : symbol_table)
 		{
 			std::cout << a.first << ":" << a.second << std::endl;
 		}
+		parser ps(symbol_table);
+		ps.lanch();
 		decltype(symbol_table.size()) n = 0;
-		std::cout << "DECLTYPEtest  " << n << std::endl;
-		symbol_table = l("select t from 产品 where 单价=6000 and 产品名称 in (select * from it )");
+		symbol_table = l("select t from 产品 where 单价 =60.900 and 产品名称 in (select * from it )");
 		std::cout << symbol_table.size() << std::endl;
+		std::cout << " DECLTYPEtest  " << n << std::endl;
 
-		//若输入非法，Lexer抛出异常，symbol_table清空
-		if (symbol_table.size() > 0)
-		{
-			for (auto a : symbol_table)
-			{
-				std::cout << a.first << ":" << a.second << std::endl;
-			}
-			std::cout << std::endl;
 
-			//parser ps(symbol_table);
-			//ps.lanch();
-		}
+
 		return 0;
 }
