@@ -21,6 +21,9 @@
     <ClCompile Include="src\QueryComplier\源.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\QueryComplier\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\linkedlist.h">
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="src\QueryComplier\QC.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

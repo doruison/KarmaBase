@@ -73,10 +73,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\QueryComplier\Parser.cpp" />
     <ClCompile Include="src\QueryComplier\QL_lexer.cpp" />
     <ClCompile Include="src\QueryComplier\源.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\linkedlist.h" />
     <ClInclude Include="src\pf.h" />
     <ClInclude Include="src\pf_buffermgr.h" />

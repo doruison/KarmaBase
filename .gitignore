@@ -3,16 +3,17 @@
 *.lo
 *.o
 *.obj
-
+*.exe
 # Precompiled Headers
 *.gch
 *.pch
-
+*.ilk
+*.pdb
 # Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
-
+*.sdf
 # Fortran module files
 *.mod
 

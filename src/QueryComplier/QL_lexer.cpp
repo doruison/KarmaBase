@@ -17,7 +17,7 @@
 std::vector<token> lexer::operator()(const std::string &s){
 	symbol_table.clear();
 	input = s;
-
+	std::cout <<"flags" ;
 	try{
 		for (unsigned int i = 0; i < input.size(); i++)
 		{
@@ -83,6 +83,8 @@ token lexer::name(unsigned int &i){
 
 token lexer::sqlstring(unsigned int &i){
 	unsigned cachei = i;
+	if (i>=input.size())
+		throw std::invalid_argument("∑«∑® ‰»Î2");
 	i++;
 	while (i<input.size() && input[i]!='\'')
 	{
