@@ -73,22 +73,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\QueryComplier\Parser.cpp" />
-    <ClCompile Include="src\QueryComplier\QL_lexer.cpp" />
-    <ClCompile Include="src\QueryComplier\源.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\linkedlist.h" />
     <ClInclude Include="src\pf.h" />
     <ClInclude Include="src\pf_buffermgr.h" />
     <ClInclude Include="src\pf_hashtable.h" />
     <ClInclude Include="src\pf_internal.h" />
-    <ClInclude Include="src\QueryComplier\QC.h" />
+    <ClInclude Include="src\QC.h" />
     <ClInclude Include="src\redbase.h" />
     <ClInclude Include="src\rm.h" />
     <ClInclude Include="src\rm_rid.h" />
     <ClInclude Include="src\statistics.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Parser.cpp" />
+    <ClCompile Include="src\QL_lexer.cpp" />
+    <ClCompile Include="src\源.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
